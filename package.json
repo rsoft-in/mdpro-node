@@ -1,0 +1,18 @@
+{
+  "name": "mdpro-node",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "com.rsoft",
+  "license": "ISC",
+  "description": "MDPro NodeJS API Service",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0"
+  }
+}
