@@ -10,11 +10,13 @@ const adressenRoutes = require('./routes/adressen_routes');
 const ndsRoutes = require('./routes/nds_routes');
 const codesRoutes = require('./routes/codes_routes');
 const productRoutes = require('./routes/product_routes');
+const transponderRoutes = require('./routes/transponder_routes');
 
 app.use('/api/adressen', adressenRoutes);
 app.use('/api/nds', ndsRoutes);
 app.use('/api/codes', codesRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/transponder', transponderRoutes);
 
 app.get('/', (req, res) => {
     res.send('MDPRO WEB SERVICE');

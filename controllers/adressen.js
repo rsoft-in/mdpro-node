@@ -6,7 +6,7 @@ adressenFilter = (post) => {
     filter += ` AND ( (adr_kunu LIKE '%${post.keyword}%') 
             OR (CONCAT(adr_nach, ' ', adr_vor) LIKE '%${post.keyword}%') 
             OR (CONCAT(adr_vor, ' ', adr_nach) LIKE '%${post.keyword}%')
-            OR (adr_str LIKE '%${post.keyword}%' OR adr_plz LIKE '%${post.keyword}%' OR adr_ort LIKE '%${keyword}%')
+            OR (adr_str LIKE '%${post.keyword}%' OR adr_plz LIKE '%${post.keyword}%' OR adr_ort LIKE '%${post.keyword}%')
             OR (adr_codes LIKE '%${post.keyword}%')
             OR (adr_firma LIKE '%${post.keyword}%')
             OR (adr_firma1 LIKE '%${post.keyword}%')
@@ -58,6 +58,7 @@ const getAdressen = async (req, res) => {
 };
 
 const updateAdressen = (req, res) => {
+  const isNew = req.body.is_new || false;
   const adr_kunu = req.body.adr_kunu || '';
   const adr_anred = req.body.adr_anred || '';
   const adr_vor = req.body.adr_vor || '';
@@ -83,9 +84,44 @@ const updateAdressen = (req, res) => {
   const adr_arexnr = req.body.adr_arexnr || '';
   const adr_latitude = req.body.adr_latitude || '';
   const adr_longitude = req.body.adr_longitude || '';
-  const tenant_id = req.body.tenant_id || '';
+
+  if(isNew) {
+    const data = [adr_kunu, adr_anred, adr_vor, adr_nach, adr_firma1, adr_firma, adr_zus, adr_post, adr_ordnr_p, adr_str, adr_plz, adr_ort, adr_ord_nr, adr_tel_g, adr_tel_p, adr_tel_f, adr_natel, adr_email, adr_bur_nr, adr_bemerkung, adr_properties, adr_codes, adr_arexnr, adr_latitude, adr_longitude];
+    Adressen.insertAdressen(req.db, data, (err, result) => {
+      if (err) {
+        console.error("Error inserting Adressen:", err.stack);
+        res.status(500).send("Error inserting Adressen");
+      } else {
+        res.status(200).send('SUCCESS');
+      }
+    });
+  } else {
+    const data = [adr_anred, adr_vor, adr_nach, adr_firma1, adr_firma, adr_zus, adr_post, adr_ordnr_p, adr_str, adr_plz, adr_ort, adr_ord_nr, adr_tel_g, adr_tel_p, adr_tel_f, adr_natel, adr_email, adr_bur_nr, adr_bemerkung, adr_properties, adr_codes, adr_arexnr, adr_latitude, adr_longitude, adr_kunu];
+    Adressen.updateAdressen(req.db, data, (err, result) => {
+      if (err) {
+        console.error("Error updating Adressen:", err.stack);
+        res.status(500).send("Error updating Adressen");
+      } else {
+        res.status(200).send('SUCCESS');
+      }
+    });
+  }
+};
+
+const deleteAdressen = (req, res) => {
+  const adr_kunu = req.body.adr_kunu || '';
+  Adressen.deleteAdressen(req.db, adr_kunu, (err, result) => {
+    if (err) {
+      console.error("Error deleting Adressen:", err.stack);
+      res.status(500).send("Error deleting Adressen");
+    } else {
+      res.status(200).send('SUCCESS');
+    }
+  });
 };
 
 module.exports = {
   getAdressen,
+  updateAdressen,
+  deleteAdressen
 };
