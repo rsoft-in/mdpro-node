@@ -85,7 +85,7 @@ const updateAdressen = (req, res) => {
   const adr_latitude = req.body.adr_latitude || '';
   const adr_longitude = req.body.adr_longitude || '';
 
-  if(isNew) {
+  if (isNew) {
     const data = [adr_kunu, adr_anred, adr_vor, adr_nach, adr_firma1, adr_firma, adr_zus, adr_post, adr_ordnr_p, adr_str, adr_plz, adr_ort, adr_ord_nr, adr_tel_g, adr_tel_p, adr_tel_f, adr_natel, adr_email, adr_bur_nr, adr_bemerkung, adr_properties, adr_codes, adr_arexnr, adr_latitude, adr_longitude];
     Adressen.insertAdressen(req.db, data, (err, result) => {
       if (err) {

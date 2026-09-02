@@ -25,6 +25,48 @@ async function getCount(db, filter) {
   return rows;
 }
 
+async function insertTransponder(db, data, callback) {
+  const query = `INSERT INTO transponder (transid, tr_vondate, tr_bisdate, produkt, 
+                  lieferart, prodnr, genonr, verbnr, qk_unt, gruppecode, 
+                  kundennr, donotshow, dailyhalt, tr_codes, bemerkung, 
+                  gisx, gisy, incl_f_vge, sperre, hinweis, liveport, tr_modified)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())`;
+  try {
+    const result = await db.query(query, data);
+    callback(null, result);
+  } catch (error) {
+    callback(error);
+  }
+};
+
+async function updateTransponder(db, data, callback) {
+  const query = `UPDATE transponder SET tr_bisdate = ?, produkt = ?, 
+                lieferart = ?, prodnr = ?, genonr = ?, verbnr = ?, qk_unt = ?, 
+                gruppecode = ?, kundennr = ?, donotshow = ?, dailyhalt = ?, 
+                tr_codes = ?, bemerkung = ?, gisx = ?, gisy = ?, incl_f_vge = ?, 
+                sperre = ?, hinweis = ?, liveport = ?, tr_modified = now() 
+                WHERE transid = ? AND tr_vondate = ?`;
+  try {
+    const result = await db.query(query, data);
+    callback(null, result);
+  } catch (error) {
+    callback(error);
+  }
+};
+
+async function deleteTransponder(db, transid, tr_vondate, callback) {
+  const query = `DELETE FROM transponder WHERE transid = ? AND tr_vondate = ?`;
+  const values = [`${transid}`, `${tr_vondate}`];
+  try {
+    const result = await db.query(query, values);
+    callback(null, result);
+  } catch (error) {
+    callback(error);
+  }
+
+};
+
+
 module.exports = {
-    get, getCount
+  get, getCount, insertTransponder, updateTransponder, deleteTransponder
 };

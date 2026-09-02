@@ -94,6 +94,75 @@ const getTransponder = async (req, res) => {
     }
 };
 
+const updateTransponder = (req, res) => {
+    const isNew = req.body.is_new || false;
+    const transId = req.body.transid || '';
+    const trVonDate = req.body.tr_vondate || '';
+    const trBisDate = req.body.tr_bisdate || '';
+    const produkt = req.body.produkt || '';
+    const lieferArt = req.body.lieferart || '';
+    const prodNr = req.body.prodnr || 0;
+    const genoNr = req.body.genonr || '';
+    const verbNr = req.body.verbnr || '';
+    const qkUnt = req.body.qk_unt || '';
+    const gruppeCode = req.body.gruppecode || '';
+    const kundenNr = req.body.kundennr || '';
+    const doNotShow = req.body.donotshow || 0;
+    const dailyHalt = req.body.dailyhalt || 0;
+    const trCodes = req.body.tr_codes || '';
+    const bemerkung = req.body.bemerkung || '';
+    const gisX = req.body.gisx || '';
+    const gisY = req.body.gisy || '';
+    const inclFVGE = req.body.incl_f_vge || 0;
+    const sperre = req.body.sperre || '';
+    const hinweis = req.body.hinweis || '';
+    const livePort = req.body.liveport || '';
+
+    var bisDatum = trBisDate == '' ? null : trBisDate
+
+    if (isNew) {
+        const data = [transId, trVonDate, bisDatum, produkt,
+            lieferArt, prodNr, genoNr, verbNr, qkUnt, gruppeCode,
+            kundenNr, doNotShow, dailyHalt, trCodes, bemerkung,
+            gisX, gisY, inclFVGE, sperre, hinweis, livePort];
+        Transponder.insertTransponder(req.db, data, (err, result) => {
+            if (err) {
+                console.error("Error inserting Transponder:", err.stack);
+                res.status(500).send("Error inserting Transponder");
+            } else {
+                res.status(200).send('SUCCESS');
+            }
+        });
+    } else {
+        const data = [bisDatum, produkt, lieferArt, prodNr, 
+            genoNr, verbNr, qkUnt, gruppeCode, kundenNr, doNotShow, 
+            dailyHalt, trCodes, bemerkung, gisX, gisY, inclFVGE, 
+            sperre, hinweis, livePort, transId, trVonDate];
+        Transponder.updateTransponder(req.db, data, (err, result) => {
+            if (err) {
+                console.error("Error updating Transponder:", err.stack);
+                res.status(500).send("Error updating Transponder");
+            } else {
+                res.status(200).send('SUCCESS');
+            }
+        });
+    }
+};
+
+const deleteTransponder = (req, res) => {
+  const transId = req.body.transid || '';
+  const trVonDate = req.body.tr_vondate || '';
+  Transponder.deleteTransponder(req.db, transId, trVonDate, (err, result) => {
+    if (err) {
+      console.error("Error deleting Transponder:", err.stack);
+      res.status(500).send("Error deleting Transponder");
+    } else {
+      res.status(200).send('SUCCESS');
+    }
+  });
+};
+
+
 module.exports = {
-    getTransponder
+    getTransponder, updateTransponder, deleteTransponder
 };
