@@ -2,9 +2,8 @@ const { getTenantPool } = require('../config/db');
 
 function attachTenantDb(req, res, next) {
     const { tenant_id } = req.body;
-
     if (!tenant_id) {
-        return res.status(400).json({ error: 'tenantId parameter is required' });
+        return res.status(400).json({ error: 'tenant_id parameter is required' });
     }
 
     try {

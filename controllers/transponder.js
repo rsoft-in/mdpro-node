@@ -1,4 +1,5 @@
 const Transponder = require('../models/transponder_model');
+const XLSX = require('xlsx');
 
 genFilter = (json) => {
     let filt = "";
@@ -78,7 +79,6 @@ const getTransponder = async (req, res) => {
     const pageSize = parseInt(req.body.page_size) || 25;
     const offset = page * pageSize;
     const filter = genFilter(req.body);
-
     try {
         const [dataResults, countResults] = await Promise.all([
             Transponder.get(req.db, filter, sort, pageSize, offset),
@@ -162,7 +162,31 @@ const deleteTransponder = (req, res) => {
   });
 };
 
+const exportToXlsx = async (req, res) => {
+    const sort = req.body.sort || "transponder.transid";
+    const filter = genFilter(req.body);
+
+    try {
+        const [dataResults] = await Promise.all([
+            Transponder.getForXlsx(req.db, filter, sort),
+        ]);
+        const worksheet = XLSX.utils.json_to_sheet(dataResults);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Transponder");
+        const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename="Accounts_Export.xlsx"');
+        res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+        res.send(buffer);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error exporting to XLSX");
+    }
+};
+
+
 
 module.exports = {
-    getTransponder, updateTransponder, deleteTransponder
+    getTransponder, updateTransponder, deleteTransponder, exportToXlsx
 };

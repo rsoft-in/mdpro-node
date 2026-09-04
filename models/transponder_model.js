@@ -25,6 +25,19 @@ async function getCount(db, filter) {
   return rows;
 }
 
+async function getForXlsx(db, filter, sort) {
+  const query = `SELECT transid, tr_vondate, tr_bisdate, kundennr, adressen.adr_anred, adressen.adr_vor, adressen.adr_nach, adressen.adr_firma1, adressen.adr_firma, adressen.adr_str, adressen.adr_plz, adressen.adr_ort, adressen.adr_tel_g, adressen.adr_tel_p, adressen.adr_natel, adressen.adr_email, verbnr, produkt, prodnr, genonr, transponder.gruppecode, qk_unt, lieferart, dailyhalt, tr_codes, adr_arexnr, adr_bur_nr, gisx, gisy, liveport
+                    FROM transponder
+                    LEFT JOIN adressen ON adressen.adr_kunu = transponder.kundennr
+                    LEFT JOIN gruppe ON gruppe.gruppecode = transponder.gruppecode
+                    LEFT JOIN product ON product.productid = transponder.produkt
+                    WHERE  ${filter}
+                    ORDER BY ${sort}`;
+
+  const [rows] = await db.query(query);
+  return rows;
+}
+
 async function insertTransponder(db, data, callback) {
   const query = `INSERT INTO transponder (transid, tr_vondate, tr_bisdate, produkt, 
                   lieferart, prodnr, genonr, verbnr, qk_unt, gruppecode, 
@@ -68,5 +81,5 @@ async function deleteTransponder(db, transid, tr_vondate, callback) {
 
 
 module.exports = {
-  get, getCount, insertTransponder, updateTransponder, deleteTransponder
+  get, getCount, getForXlsx, insertTransponder, updateTransponder, deleteTransponder
 };
