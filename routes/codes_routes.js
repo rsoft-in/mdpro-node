@@ -4,6 +4,8 @@ const codesController = require('../controllers/codes');
 const attachTenantDb = require('../middleware/tenant_db');
 
 router.post('/get', attachTenantDb, codesController.getCodes);
-router.post('/get_by_art', attachTenantDb, codesController.getCodesByArt);
+router.post('/get_by_art', attachTenantDb, codesController.getCodesByArt)
+router.post('/update', attachTenantDb, codesController.updateCodes);
+router.post('/delete', attachTenantDb, codesController.deleteCodes);
 
 module.exports = router;
