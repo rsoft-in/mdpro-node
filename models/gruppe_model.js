@@ -26,6 +26,14 @@ async function getCount(db, search, active) {
     return rows;
 }
 
+async function getByCode(db, gruppeCode) {
+    const query = `SELECT * FROM gruppe WHERE gruppecode = ?`;
+
+    const values = [`${gruppeCode}`];
+    const [rows] = await db.query(query, values);
+    return rows;
+}
+
 async function getEmails(db, search) {
     const query = `SELECT * FROM gruppe 
                     WHERE gruppeemail != '' AND (gruppecode LIKE ? 
@@ -50,6 +58,17 @@ async function insertGruppe(db, data, callback) {
 
 async function updateGruppe(db, data, callback) {
     const query = `UPDATE gruppe SET gruppename = ?, gruppeemail = ?, gruppeexpformat = ?, gruppeusemail = ?, gruppeactive = ?, gruppemodified = now()
+                    WHERE gruppecode = ?`;
+    try {
+        const result = await db.query(query, data);
+        callback(null, result);
+    } catch (error) {
+        callback(error);
+    }
+}
+
+async function updateOnImport(db, data, callback) {
+    const query = `UPDATE gruppe SET gruppename = ?, gruppeemail = ?, gruppemodified = now()
                     WHERE gruppecode = ?`;
     try {
         const result = await db.query(query, data);
@@ -93,5 +112,5 @@ async function deleteGruppe(db, gruppeCode, callback) {
 }
 
 module.exports = {
-    get, getCount, getEmails, insertGruppe, updateGruppe, updateUseEmail, updateActive, deleteGruppe
+    get, getCount, getByCode, getEmails, insertGruppe, updateGruppe, updateOnImport, updateUseEmail, updateActive, deleteGruppe
 }

@@ -9,5 +9,6 @@ router.post('/update', attachTenantDb, gruppeController.updateGruppe);
 router.post('/update_use_email', attachTenantDb, gruppeController.updateUseEmail);
 router.post('/update_active', attachTenantDb, gruppeController.updateActive);
 router.post('/delete', attachTenantDb, gruppeController.deleteGruppe);
+router.post('/download', attachTenantDb, gruppeController.download);
 
 module.exports = router;
