@@ -35,7 +35,7 @@ adressenFilter = (post) => {
 };
 
 const getAdressen = async (req, res) => {
-  const sort = req.body.sort || "adr_avor";
+  const sort = req.body.sort || "adr_vor";
   const page = parseInt(req.body.page) || 0;
   const pageSize = parseInt(req.body.page_size) || 25;
   const offset = page * pageSize;
@@ -54,6 +54,20 @@ const getAdressen = async (req, res) => {
   } catch (err) {
     console.error("Error fetching Adressen:", err.stack);
     res.status(500).send("Error fetching Adressen");
+  }
+};
+
+const getByKundenNr = async (req, res) => {
+  const adrKunu = req.body.adr_kunu || '';
+  try {
+    const [dataResults] = await Promise.all([
+      Adressen.getByKundenNr(req.db, adrKunu),
+    ]);
+
+    res.json(dataResults);
+  } catch (err) {
+    console.error("Error fetching Adresse:", err.stack);
+    res.status(500).send("Error fetching Adresse");
   }
 };
 
@@ -122,6 +136,7 @@ const deleteAdressen = (req, res) => {
 
 module.exports = {
   getAdressen,
+  getByKundenNr,
   updateAdressen,
   deleteAdressen
 };

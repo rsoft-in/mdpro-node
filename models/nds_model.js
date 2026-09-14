@@ -33,8 +33,15 @@ async function getAbholStats(db, filter) {
   return rows;
 }
 
+async function getMonthCount(db) {
+  const query = `SELECT count(*) as nds_count FROM nds WHERE MONTH(tourdtyear) = MONTH(CURRENT_DATE()) AND YEAR(tourdtyear) = YEAR(CURRENT_DATE())`;
+  const [rows] = await db.query(query);
+  return rows;
+}
+
 module.exports = {
   get,
   getStats,
   getAbholStats,
+  getMonthCount,
 };

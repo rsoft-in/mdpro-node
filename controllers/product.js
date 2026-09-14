@@ -52,7 +52,7 @@ const updateProduct = (req, res) => {
     const isNew = req.body.isNew;
 
     if (isNew) {
-        const data = [productid, productname, productconvfactor, productname_reg, 
+        const data = [productid, productname, productconvfactor, productname_reg,
             product_segment, product_segment2, product_quality, product_user];
         Product.insertProduct(req.db, data, (err, result) => {
             if (err) {
@@ -63,7 +63,7 @@ const updateProduct = (req, res) => {
             }
         });
     } else {
-        const data = [productname, productconvfactor, productname_reg, 
+        const data = [productname, productconvfactor, productname_reg,
             product_segment, product_segment2, product_quality, product_user, productid];
         Product.updateProduct(req.db, data, (err, result) => {
             if (err) {
@@ -100,6 +100,28 @@ const deleteProduct = (req, res) => {
             res.json("SUCCESS");
         }
     });
+};
+
+const download = async (req, res) => {
+    const post = req.body;
+    let rowsAffected = 0;
+    const url = "https://regtool.mdpro.ch/ws/public/index.php/products/get_all";
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: ''
+        });
+        const parsed = await response.json();
+        for (const product of parsed) {
+
+        }
+    } catch (e) {
+        return res.status(500).json({ message: e.message });
+    }
+
 };
 
 module.exports = {

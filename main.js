@@ -13,6 +13,7 @@ const productRoutes = require('./routes/product_routes');
 const transponderRoutes = require('./routes/transponder_routes');
 const genossenschaftsRoutes = require('./routes/genossenschafts_routes');
 const gruppeRoutes = require('./routes/gruppe_routes');
+const dashboardRoutes = require('./routes/dashboard_routes');
 
 app.use('/api/adressen', adressenRoutes);
 app.use('/api/nds', ndsRoutes);
@@ -21,6 +22,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/transponder', transponderRoutes);
 app.use('/api/genossenschafts', genossenschaftsRoutes);
 app.use('/api/gruppe', gruppeRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.get('/', (req, res) => {
     res.send('MDPRO WEB SERVICE');

@@ -18,6 +18,14 @@ async function getCount(db, filter) {
   return rows;
 }
 
+async function getByKundenNr(db, adrKunu) {
+  const query = `SELECT * FROM adressen WHERE adr_kunu = ?`;
+
+  const values = [`${adrKunu}`];
+  const [rows] = await db.query(query, values);
+  return rows;
+}
+
 async function insertAdressen(db, data, callback) {
     const query = `INSERT INTO adressen (adr_kunu, adr_anred, adr_vor, adr_nach, adr_firma1, adr_firma, adr_zus, adr_post, adr_ordnr_p, adr_str, adr_plz, adr_ort, adr_ord_nr, adr_tel_g, adr_tel_p, adr_tel_f, adr_natel, adr_email, adr_bur_nr, adr_bemerkung, adr_properties, adr_codes, adr_arexnr, adr_latitude, adr_longitude)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -55,6 +63,7 @@ async function deleteAdressen(db, adr_kunu, callback) {
 module.exports = {
   get,
   getCount,
+  getByKundenNr,
   insertAdressen,
   updateAdressen,
   deleteAdressen
