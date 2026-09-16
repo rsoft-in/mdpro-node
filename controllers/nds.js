@@ -42,6 +42,15 @@ ndsFilter = (post) => {
     filt += buildFilter("probennr", post.probennr);
   }
 
+  if (post?.coord_state) {
+    if (post?.coord_state == 'wc') {
+      filt += " AND (latitude IS NOT NULL AND latitude != '')";
+    }
+    if (post?.coord_state == 'woc') {
+      filt += " AND (latitude is NULL OR latitude = '')";
+    }
+  }
+
   const fromdate = convertDate_DE_UN(post?.fromdate);
   const todate = convertDate_DE_UN(post?.todate);
   const dateField =
@@ -76,6 +85,28 @@ const getNds = async (req, res) => {
   }
 };
 
+const checkConstraint = async (req, res) => {
+  const tourdtyear = req.body.tourdtyear || '';
+  const liefdatum = req.body.liefdatum || '';
+  const pendzeit = req.body.pendzeit || '';
+  const transid = req.body.transid || '';
+  const milchmenge = req.body.milchmenge || 0;
+  const probenfnr = req.body.probenfnr || '';
+  try {
+    const data = [tourdtyear, liefdatum, pendzeit, transid, milchmenge, probenfnr];
+    const [dataResults] = await Promise.all([
+      Nds.getByKey(req.db, data),
+    ]);
+    res.json({
+      duplicate: dataResults.length == 1,
+    });
+  } catch (err) {
+    console.error("Error checking constraint:", err.stack);
+    res.status(500).send("Error checking constraint");
+  }
+};
+
 module.exports = {
   getNds,
+  checkConstraint
 };

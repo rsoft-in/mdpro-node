@@ -39,9 +39,19 @@ async function getMonthCount(db) {
   return rows;
 }
 
+async function getByKey(db, data) {
+  const sqlQry = `SELECT * FROM nds 
+                  WHERE tourdtyear = ? AND liefdatum = ? 
+                    AND pendzeit = ? AND transid = ? 
+                    AND milchmenge = ? AND probenfnr = ?`;
+  const [rows] = await db.query(sqlQry);
+  return rows;
+}
+
 module.exports = {
   get,
   getStats,
   getAbholStats,
   getMonthCount,
+  getByKey
 };
