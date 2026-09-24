@@ -44,8 +44,24 @@ async function getByKey(db, data) {
                   WHERE tourdtyear = ? AND liefdatum = ? 
                     AND pendzeit = ? AND transid = ? 
                     AND milchmenge = ? AND probenfnr = ?`;
-  const [rows] = await db.query(sqlQry);
+  const [rows] = await db.query(sqlQry, data);
   return rows;
+}
+
+async function alterField(db, type, oldValue, newValue, filter, callback) {
+  const query = `UPDATE nds 
+					LEFT JOIN transponder ON (transponder.transid = nds.transid)
+          AND (transponder.tr_vondate <= nds.tourdtyear) AND (transponder.tr_bisdate >= nds.tourdtyear OR transponder.tr_bisdate is null )
+          LEFT JOIN product ON product.productid = transponder.produkt
+					LEFT JOIN adressen ON adressen.adr_kunu = transponder.kundennr
+          SET ${type} = ? WHERE (${type} = ?) AND ${filter}`;
+  const values = [`${newValue}`, `${oldValue}`];
+  try {
+    const result = await db.query(query, values);
+    callback(null, result);
+  } catch (error) {
+    callback(error);
+  }
 }
 
 module.exports = {
@@ -53,5 +69,6 @@ module.exports = {
   getStats,
   getAbholStats,
   getMonthCount,
-  getByKey
+  getByKey,
+  alterField
 };

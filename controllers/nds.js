@@ -106,7 +106,24 @@ const checkConstraint = async (req, res) => {
   }
 };
 
+const alterField = async (req, res) => {
+  const type = req.body.type || '';
+  const oldValue = req.body.old || '';
+  const newValue = req.body.new || '';
+  const filter = ndsFilter(req.body);
+
+  Nds.alterField(req.db, type, oldValue, newValue, filter, (err, result) => {
+    if (err) {
+      console.error("Error updating NDS fields:", err.stack);
+      res.status(500).send("Error updating NDS fields");
+    } else {
+      res.status(200).send('SUCCESS');
+    }
+  });
+};
+
 module.exports = {
   getNds,
-  checkConstraint
+  checkConstraint,
+  alterField
 };
