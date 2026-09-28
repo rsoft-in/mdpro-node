@@ -7,5 +7,6 @@ router.post('/get', attachTenantDb, adressenController.getAdressen);
 router.post('/update', attachTenantDb, adressenController.updateAdressen);
 router.post('/delete', attachTenantDb, adressenController.deleteAdressen);
 router.post('/get_by_kunden', attachTenantDb, adressenController.getByKundenNr);
+router.post('/get_next_kundennr', attachTenantDb, adressenController.getNextAdrKunu);
 
 module.exports = router;

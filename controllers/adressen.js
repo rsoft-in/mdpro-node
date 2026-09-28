@@ -71,6 +71,19 @@ const getByKundenNr = async (req, res) => {
   }
 };
 
+const getNextAdrKunu = async (req, res) => {
+  try {
+    const [newId] = await Promise.all([
+      Adressen.getNextAdrKunu(req.db),
+    ]);
+
+    res.json(newId);
+  } catch (err) {
+    console.error("Error fetching Kunden Nr.:", err.stack);
+    res.status(500).send("Error fetching Kunden Nr.");
+  }
+}
+
 const updateAdressen = (req, res) => {
   const isNew = req.body.is_new || false;
   const adr_kunu = req.body.adr_kunu || '';
@@ -137,6 +150,7 @@ const deleteAdressen = (req, res) => {
 module.exports = {
   getAdressen,
   getByKundenNr,
+  getNextAdrKunu,
   updateAdressen,
   deleteAdressen
 };
